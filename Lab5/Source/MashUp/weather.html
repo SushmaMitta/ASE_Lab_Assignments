@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head >
+    <meta charset="UTF-8">
+    <title>Weather Info</title>
+
+    <style>
+        body {background-color: lightcyan;}
+        h1   {color: blue; text-align: center;}
+        h2   {color: blue; text-align: center;}
+        p    {color: blue;}
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+<body>
+
+<h1>MashUp Example</h1>
+<h2>Using Weather API and New York Times API</h2>
+<p align="center">
+    City: <label for="city"> </label>
+    <input id="city" value="New York City"/>
+    <br/> </br>
+    <button id="submit" class="button">Submit</button>
+
+</p>
+
+<p id="weatherdata" align="center"></p>
+
+<script type="text/javascript">
+
+    document.getElementById("submit").onclick = function () {
+
+
+        var city= document.getElementById("city").value;
+
+        var url= 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&APPID=3ea7ae1e545094076aafee3c9b02af64&units=metric';
+       // location.href = url;
+
+        var xhReq = new XMLHttpRequest();
+        xhReq.open("GET", url, false);
+        xhReq.send(null);
+        var jsonObject = JSON.parse(xhReq.responseText);
+
+        var stringdata=JSON.stringify(jsonObject);
+        var obj = JSON.parse(stringdata);
+
+
+       /* document.getElementById("weatherdata").innerHTML =
+                "City Name: " + obj.name + '</br>' + "Temperature" + obj.main.temp +
+                '</br>' + "Humidity" + obj.main.humidity + '</br>' + "Description" + obj.weather.description +
+                '</br>' + "Wind" + obj.wind.speed ;
+        */
+
+        var url1= 'http://api.nytimes.com/svc/search/v2/articlesearch.json?&&&fq=news_desk:("Fashion") AND glocations:("'
+                + city +
+                '")&api-key=3880a64028e7d47107f18895891352f8:2:74528593';
+        // location.href = url1;
+
+        var xhReq1 = new XMLHttpRequest();
+        xhReq1.open("GET", url1, false);
+        xhReq1.send(null);
+        var jsonObject1 = JSON.parse(xhReq1.responseText);
+
+        var stringdata1=JSON.stringify(jsonObject1);
+        var obj1 = JSON.parse(stringdata1);
+
+        var fd=  "Hits on fashion columns: " + obj1.response.meta.hits + '</br>' +
+                "Top fashion column link: " + obj1.response.docs[1].web_url;
+
+
+        if(fd.length == 0){
+
+            document.getElementById("weatherdata").innerHTML =
+                    "City Name: " + obj.name + '</br>' + "Temperature: " + obj.main.temp + ' &#8451' +
+                    '</br>' + "Humidity: " + obj.main.humidity +
+                    '</br>' + "Wind: " + obj.wind.speed + " mpH"
+        }
+        else {
+
+            document.getElementById("weatherdata").innerHTML =
+                    "City Name: " + obj.name + '</br>' + "Temperature: " + obj.main.temp + ' &#8451' +
+                    '</br>' + "Humidity: " + obj.main.humidity +
+                    '</br>' + "Wind: " + obj.wind.speed + " mpH" + '</br>' + '</br>' + fd;
+            // "Hits on fashion columns: " + obj1.response.meta.hits + '</br>' +
+            //  "Fashion column links: " + obj1.response.docs[1].web_url ;
+        }
+    };
+
+
+
+
+</script>
+
+
+</body>
+</html>
