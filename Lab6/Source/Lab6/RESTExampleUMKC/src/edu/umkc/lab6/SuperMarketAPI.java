@@ -1,0 +1,45 @@
+package edu.umkc.lab6;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
+@Path("/rest")
+public class SuperMarketAPI {
+	
+	@Path("/marketservice")	
+	@GET
+	@Produces("application/xml")
+	public String getSuperMarketDetails() throws IOException{
+		String url = "http://www.supermarketapi.com/api.asmx/SearchByProductName?APIKEY=62043b0f15&ItemName=apple";
+        CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(url);
+        CloseableHttpResponse resp = closeableHttpClient.execute(httpGet);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(resp.getEntity().getContent()));
+        StringBuffer response = new StringBuffer();
+        String inputLine = "";
+        while ((inputLine = reader.readLine()) != null) {
+        	response.append(inputLine);
+        }
+        reader.close();
+        closeableHttpClient.close();
+        System.out.println(response.toString());
+        return response.toString();
+
+	}
+
+	public static void main(String[] args) throws IOException {
+		SuperMarketAPI superMarketService= new SuperMarketAPI();
+		superMarketService.getSuperMarketDetails();
+	}
+
+}
